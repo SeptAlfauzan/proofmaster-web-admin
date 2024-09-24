@@ -15,12 +15,12 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useAuth } from "./hooks/use_auth";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useAuth } from "./hooks/use_auth";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const authSchema = z
@@ -48,7 +48,7 @@ export default function Page() {
 
   useEffect(() => {
     if (response?.data?.token != undefined) router.replace("/dashboard");
-  }, [response]);
+  }, [response, router]);
 
   return (
     <Box height={"100vh"}>

@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button, Card, Heading, Text } from "@chakra-ui/react";
-import { link } from "fs";
 import { useRouter } from "next/navigation";
 import { MdArrowRightAlt } from "react-icons/md";
 

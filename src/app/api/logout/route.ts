@@ -1,4 +1,3 @@
-import { AuthResult } from "@/app/domain/dto/auth_result";
 import { JWT_TOKEN_KEY } from "@/constanta";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -8,7 +7,7 @@ export async function GET() {
     hello: "this is logout endpoint",
   });
 }
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const cookieStore = cookies();
     cookieStore.delete(JWT_TOKEN_KEY);

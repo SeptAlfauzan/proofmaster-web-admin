@@ -2,7 +2,7 @@ import { Button, Card, Text } from "@chakra-ui/react";
 import { MdRefresh } from "react-icons/md";
 
 type HandleErrorType = {
-  error: any;
+  error: string;
   onRefresh: () => void;
 };
 const HandleError: React.FC<HandleErrorType> = ({ error, onRefresh }) => {

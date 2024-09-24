@@ -11,15 +11,12 @@ import {
   Tbody,
   Td,
   Text,
-  Tfoot,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
-  MdArrowDownward,
   MdChevronLeft,
   MdChevronRight,
   MdDelete,
@@ -116,7 +113,9 @@ const DataTable = <T extends DataItem>({
                 </Th>
               ))}
               <Th>
-                <Text textAlign="right">Actions</Text>
+                <Text key={"actions-header"} textAlign="right">
+                  Actions
+                </Text>
               </Th>
             </Tr>
           </Thead>
@@ -125,7 +124,7 @@ const DataTable = <T extends DataItem>({
               <Tr key={key}>
                 {headers.map((header, index) =>
                   header == "photo_url" ? (
-                    <center>
+                    <center key={index}>
                       <Avatar
                         background={"gray.100"}
                         padding={1}

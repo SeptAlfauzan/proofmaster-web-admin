@@ -1,12 +1,12 @@
 "use client";
 import {
   Box,
+  Button,
+  CircularProgress,
+  Icon,
   List,
   ListItem,
   Text,
-  Icon,
-  Button,
-  CircularProgress,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +64,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [loading, error, response, submit, dismissError] = useLogout();
 
+  console.log(error, dismissError);
   if (response) {
     router.replace("/auth");
   }
@@ -72,7 +73,7 @@ export default function DashboardLayout({
     <Box display={"flex"}>
       <Box height={"100vh"}>
         <List padding={"20px"}>
-          <Box mb={"80px"}>
+          <Box mb={"80px"} key={"dashboard ic"}>
             <Image
               src={"/images/logo_with_text.png"}
               alt={"logo"}
@@ -141,6 +142,7 @@ export default function DashboardLayout({
             </ListItem>
           ))}
           <Button
+            key={"logout"}
             width={"100%"}
             mb={"40px"}
             display="flex"

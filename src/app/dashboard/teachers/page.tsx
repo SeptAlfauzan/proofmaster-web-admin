@@ -1,6 +1,5 @@
 "use client";
 import DataTable, { DataItem } from "@/app/components/data_table";
-import { Students } from "@/app/domain/dto/students";
 import { Teachers } from "@/app/domain/dto/teachers";
 import { fetcher } from "@/utils/fetcher";
 import { Button, Card, Text } from "@chakra-ui/react";

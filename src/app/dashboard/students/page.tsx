@@ -3,7 +3,7 @@ import DataTable, { DataItem } from "@/app/components/data_table";
 import { Students } from "@/app/domain/dto/students";
 import { fetcher } from "@/utils/fetcher";
 import { Button, Card, Text } from "@chakra-ui/react";
-import { MdAdd, MdRefresh } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import useSWR from "swr";
 import HandleError from "../_components/handle_error";
 

@@ -2,9 +2,9 @@
 import { fetcher } from "@/utils/fetcher";
 import { SimpleGrid, Text } from "@chakra-ui/react";
 import useSWR from "swr";
+import { DashboardStats } from "../domain/dto/dashboard_stats";
 import HandleError from "./_components/handle_error";
 import MenuCard from "./_components/menu_card";
-import { DashboardStats, Datum } from "../domain/dto/dashboard_stats";
 
 const Page = () => {
   const { data, isLoading, mutate, error } = useSWR<DashboardStats>(
