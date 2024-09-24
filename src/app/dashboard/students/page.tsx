@@ -5,6 +5,7 @@ import { fetcher } from "@/utils/fetcher";
 import { Button, Card, Text } from "@chakra-ui/react";
 import { MdAdd, MdRefresh } from "react-icons/md";
 import useSWR from "swr";
+import HandleError from "../_components/handle_error";
 
 const Page = () => {
   const { data, isLoading, error, mutate } = useSWR<Students>(
@@ -13,15 +14,7 @@ const Page = () => {
   );
 
   if (isLoading) return <Text>Loading data..</Text>;
-  if (error)
-    return (
-      <Card p={4}>
-        <Text>Error: {error}</Text>
-        <Button rightIcon={<MdRefresh />} onClick={() => mutate()}>
-          Refresh
-        </Button>
-      </Card>
-    );
+  if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
 
   if (data == undefined) return <Text>No data from server</Text>;
   return (
