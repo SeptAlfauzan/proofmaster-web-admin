@@ -1,8 +1,16 @@
 "use client";
-import { Box, List, ListItem, Text, Icon, Button } from "@chakra-ui/react";
+import {
+  Box,
+  List,
+  ListItem,
+  Text,
+  Icon,
+  Button,
+  CircularProgress,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   MdAutoGraph,
   MdDashboard,
@@ -11,6 +19,7 @@ import {
   MdPersonAddAlt,
   MdPersonAddAlt1,
 } from "react-icons/md";
+import { useLogout } from "./_hooks/use_logout";
 
 interface LinkItem {
   href: string;
@@ -52,6 +61,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loading, error, response, submit, dismissError] = useLogout();
+
+  if (response) {
+    router.replace("/auth");
+  }
 
   return (
     <Box display={"flex"}>
@@ -140,9 +155,11 @@ export default function DashboardLayout({
               alignItems={"center"}
               justifyContent={"center"}
               color={"gray.400"}
+              onClick={() => submit()}
             >
               <Icon fontSize={24} _groupHover={{ color: "white" }}>
                 <MdLogout />
+                {loading && <CircularProgress isIndeterminate color="white" />}
               </Icon>
               <Text _groupHover={{ color: "white" }}>Logout</Text>
             </Box>

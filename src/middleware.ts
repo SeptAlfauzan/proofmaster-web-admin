@@ -7,12 +7,14 @@ export async function middleware(request: NextRequest) {
 }
 
 async function verifyToken(request: NextRequest) {
+  console.log("token");
   try {
     const tokenFromHeader =
       request.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
     const tokenFromCookies = request.cookies.get(JWT_TOKEN_KEY)?.value;
     const token = tokenFromCookies ?? tokenFromHeader;
     // Instead of verifying the token here, we'll call an API route
+
     const response = await fetch(`${request.nextUrl.origin}/api/verify-token`, {
       method: "POST",
       headers: {
@@ -40,5 +42,5 @@ async function verifyToken(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard/:path*"],
 };
