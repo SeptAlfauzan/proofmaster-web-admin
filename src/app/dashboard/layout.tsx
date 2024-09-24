@@ -73,7 +73,15 @@ export default function DashboardLayout({
               role="group"
               padding={2}
               rounded={"lg"}
-              background={pathname.includes(item.href) ? "blue" : undefined}
+              background={
+                key == 0
+                  ? pathname == item.href
+                    ? "blue"
+                    : undefined
+                  : pathname.includes(item.href)
+                  ? "blue"
+                  : undefined
+              }
               _hover={{ background: "blue" }}
             >
               <Link href={item.href}>
@@ -87,13 +95,29 @@ export default function DashboardLayout({
                   <Icon
                     fontSize={24}
                     _groupHover={{ color: "white" }}
-                    color={pathname.includes(item.href) ? "white" : undefined}
+                    color={
+                      key == 0
+                        ? pathname == item.href
+                          ? "white"
+                          : undefined
+                        : pathname.includes(item.href)
+                        ? "white"
+                        : undefined
+                    }
                   >
                     {item.icon}
                   </Icon>
                   <Text
                     _groupHover={{ color: "white" }}
-                    color={pathname.includes(item.href) ? "white" : undefined}
+                    color={
+                      key == 0
+                        ? pathname == item.href
+                          ? "white"
+                          : undefined
+                        : pathname.includes(item.href)
+                        ? "white"
+                        : undefined
+                    }
                   >
                     {item.text}
                   </Text>

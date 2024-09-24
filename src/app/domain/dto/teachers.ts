@@ -1,12 +1,12 @@
-export interface Students {
+export interface Teachers {
   data: Data;
 }
 
 export interface Data {
-  students: Student[];
+  teachers: Teachers[];
 }
 
-export interface Student {
+export interface Teacher {
   id: string;
   photo_url: string;
   name: string;

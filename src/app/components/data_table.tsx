@@ -1,5 +1,6 @@
 "use client";
 import {
+  Avatar,
   Box,
   Heading,
   IconButton,
@@ -15,8 +16,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { MdArrowDownward, MdChevronLeft, MdChevronRight } from "react-icons/md";
+import {
+  MdArrowDownward,
+  MdChevronLeft,
+  MdChevronRight,
+  MdDelete,
+  MdEdit,
+} from "react-icons/md";
 
 export type DataItem = {
   [key: string]: string | number;
@@ -100,28 +108,56 @@ const DataTable = <T extends DataItem>({
           <Thead background="gray.100">
             <Tr>
               {headers.map((header, index) => (
-                <Th key={index} alignItems="center">
-                  <IconButton mr={4} icon={<MdArrowDownward />} aria-label="" />
-                  {header}
+                <Th key={index} alignItems="center" p={4}>
+                  {/* <IconButton mr={4} icon={<MdArrowDownward />} aria-label="" /> */}
+                  <Text textAlign="center">
+                    {header == "photo_url" ? "Avatar" : header}
+                  </Text>
                 </Th>
               ))}
+              <Th>
+                <Text textAlign="right">Actions</Text>
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
             {currentItems.map((item, key) => (
               <Tr key={key}>
-                {headers.map((header, index) => (
-                  <Td key={index}>{item[header]}</Td>
-                ))}
+                {headers.map((header, index) =>
+                  header == "photo_url" ? (
+                    <center>
+                      <Avatar
+                        background={"gray.100"}
+                        padding={1}
+                        src={item[header].toString()}
+                        m={2}
+                        left={0}
+                        right={0}
+                      />
+                    </center>
+                  ) : (
+                    <Td key={index}>{item[header]}</Td>
+                  )
+                )}
+                <Td>
+                  <Box display={"flex"} gap={2} justifyContent={"end"}>
+                    <IconButton
+                      background={"none"}
+                      color={"blue"}
+                      icon={<MdEdit />}
+                      aria-label="edit"
+                    ></IconButton>
+                    <IconButton
+                      color={"red"}
+                      background={"none"}
+                      icon={<MdDelete />}
+                      aria-label="delete"
+                    ></IconButton>
+                  </Box>
+                </Td>
               </Tr>
             ))}
           </Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-            </Tr>
-          </Tfoot>
         </Table>
       </TableContainer>
 
