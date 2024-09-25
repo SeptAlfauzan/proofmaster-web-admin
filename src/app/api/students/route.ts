@@ -27,3 +27,32 @@ export async function GET() {
     return NextResponse.json({ message: e }, { status: status });
   }
 }
+
+export async function POST(req: Request) {
+  let status;
+  try {
+    const { email, password, nim, name } = await req.json();
+    const baseUrl = process.env.BASE_URL;
+    const rawResponse = await fetch(`${baseUrl}/api/users`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        nim,
+        name,
+      }),
+    });
+
+    status = rawResponse.status;
+    if (status != 200) throw Error(rawResponse.statusText);
+    const result = await rawResponse.json();
+
+    return NextResponse.json({ data: result.data }, { status });
+  } catch (e) {
+    return NextResponse.json({ message: e }, { status: status });
+  }
+}

@@ -7,8 +7,10 @@ import { Button, Card, Text } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 import useSWR from "swr";
 import HandleError from "../_components/handle_error";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
   const { data, isLoading, error, mutate } = useSWR<Students>(
     "/api/students",
     fetcher
@@ -22,7 +24,11 @@ const Page = () => {
     <Card padding={4} overflowX={{ base: "scroll", md: undefined }}>
       <DataTable
         actionWidget={
-          <Button rightIcon={<MdAdd />} colorScheme="blue">
+          <Button
+            rightIcon={<MdAdd />}
+            colorScheme="blue"
+            onClick={() => router.push("/dashboard/students/new")}
+          >
             Add student
           </Button>
         }
