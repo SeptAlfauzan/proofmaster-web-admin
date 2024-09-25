@@ -128,7 +128,7 @@ export default function Page() {
                 width={"100%"}
               >
                 {loading ? (
-                  <CircularProgress isIndeterminate color="white" />
+                  <CircularProgress isIndeterminate color="white" size={8} />
                 ) : (
                   "Login"
                 )}

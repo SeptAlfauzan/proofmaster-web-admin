@@ -1,26 +1,26 @@
 "use client";
+import { useToast } from "@chakra-ui/react";
+import React from "react";
 import {
   Box,
   Button,
   CircularProgress,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   Icon,
   IconButton,
   List,
   ListItem,
-  Text,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
   useDisclosure,
-  useToast,
+  Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
 import {
   MdAutoGraph,
   MdDashboard,
@@ -185,6 +185,7 @@ export default function DashboardLayout({
         minHeight="100vh"
         paddingTop="80px"
         paddingX="16px"
+        overflow={"hidden"}
       >
         <IconButton
           aria-label="Open menu"

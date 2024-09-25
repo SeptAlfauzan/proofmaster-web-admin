@@ -1,5 +1,6 @@
 "use client";
 import DataTable, { DataItem } from "@/app/components/data_table";
+import TableLoader from "@/app/components/table_loader";
 import { Students } from "@/app/domain/dto/students";
 import { fetcher } from "@/utils/fetcher";
 import { Button, Card, Text } from "@chakra-ui/react";
@@ -13,15 +14,15 @@ const Page = () => {
     fetcher
   );
 
-  if (isLoading) return <Text>Loading data..</Text>;
+  if (isLoading) return <TableLoader />;
   if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
+  if (!data) return <Text>No data from server</Text>;
 
-  if (data == undefined) return <Text>No data from server</Text>;
   return (
     <Card padding={4} overflowX={{ base: "scroll", md: undefined }}>
       <DataTable
         actionWidget={
-          <Button ml={4} rightIcon={<MdAdd />} colorScheme="blue">
+          <Button rightIcon={<MdAdd />} colorScheme="blue">
             Add student
           </Button>
         }
@@ -33,4 +34,5 @@ const Page = () => {
     </Card>
   );
 };
+
 export default Page;

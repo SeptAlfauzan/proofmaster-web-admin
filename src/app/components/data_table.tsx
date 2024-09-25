@@ -88,76 +88,83 @@ const DataTable = <T extends DataItem>({
 
   return (
     <Box>
-      <Box display="flex">
+      <Box
+        display="flex"
+        flexDir={{ base: "column", md: "row" }}
+        gap={4}
+        mb={10}
+      >
         <Box flex={1}>
           <Heading>{title}</Heading>
-          <Text mb={8}>{desc}</Text>
+          <Text>{desc}</Text>
         </Box>
         <Input
-          width={228}
-          placeholder="Search Name"
+          width={{ md: 228, base: "100%" }}
+          placeholder={`Search by ${searchBy}`}
           onChange={(e) => setSearch(e.target.value)}
         />
         {actionWidget}
       </Box>
       <TableContainer>
-        <Table size="sm">
-          <Thead background="gray.100">
-            <Tr>
-              {headers.map((header, index) => (
-                <Th key={index} alignItems="center" p={4}>
-                  {/* <IconButton mr={4} icon={<MdArrowDownward />} aria-label="" /> */}
-                  <Text textAlign="center">
-                    {header == "photo_url" ? "Avatar" : header}
+        <Box overflowX={"scroll"} overflowWrap={"anywhere"}>
+          <Table size="sm">
+            <Thead background="gray.100">
+              <Tr>
+                {headers.map((header, index) => (
+                  <Th key={index} alignItems="center" p={4}>
+                    {/* <IconButton mr={4} icon={<MdArrowDownward />} aria-label="" /> */}
+                    <Text textAlign="center">
+                      {header == "photo_url" ? "Avatar" : header}
+                    </Text>
+                  </Th>
+                ))}
+                <Th>
+                  <Text key={"actions-header"} textAlign="right">
+                    Actions
                   </Text>
                 </Th>
-              ))}
-              <Th>
-                <Text key={"actions-header"} textAlign="right">
-                  Actions
-                </Text>
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {currentItems.map((item, key) => (
-              <Tr key={key}>
-                {headers.map((header, index) =>
-                  header == "photo_url" ? (
-                    <center key={index}>
-                      <Avatar
-                        background={"gray.100"}
-                        padding={1}
-                        src={item[header].toString()}
-                        m={2}
-                        left={0}
-                        right={0}
-                      />
-                    </center>
-                  ) : (
-                    <Td key={index}>{item[header]}</Td>
-                  )
-                )}
-                <Td>
-                  <Box display={"flex"} gap={2} justifyContent={"end"}>
-                    <IconButton
-                      background={"none"}
-                      color={"blue"}
-                      icon={<MdEdit />}
-                      aria-label="edit"
-                    ></IconButton>
-                    <IconButton
-                      color={"red"}
-                      background={"none"}
-                      icon={<MdDelete />}
-                      aria-label="delete"
-                    ></IconButton>
-                  </Box>
-                </Td>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {currentItems.map((item, key) => (
+                <Tr key={key}>
+                  {headers.map((header, index) =>
+                    header == "photo_url" ? (
+                      <center key={index}>
+                        <Avatar
+                          background={"gray.100"}
+                          padding={1}
+                          src={item[header].toString()}
+                          m={2}
+                          left={0}
+                          right={0}
+                        />
+                      </center>
+                    ) : (
+                      <Td key={index}>{item[header]}</Td>
+                    )
+                  )}
+                  <Td>
+                    <Box display={"flex"} gap={2} justifyContent={"end"}>
+                      <IconButton
+                        background={"none"}
+                        color={"blue"}
+                        icon={<MdEdit />}
+                        aria-label="edit"
+                      ></IconButton>
+                      <IconButton
+                        color={"red"}
+                        background={"none"}
+                        icon={<MdDelete />}
+                        aria-label="delete"
+                      ></IconButton>
+                    </Box>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
       </TableContainer>
 
       <Box
