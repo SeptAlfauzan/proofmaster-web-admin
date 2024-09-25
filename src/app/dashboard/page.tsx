@@ -19,7 +19,7 @@ const Page = () => {
     );
 
   return (
-    <SimpleGrid columns={4} spacing={4}>
+    <SimpleGrid columns={{ lg: 4, md: 2, base: 1 }} spacing={4}>
       {data.data.map((item, key) => (
         <MenuCard
           key={key}

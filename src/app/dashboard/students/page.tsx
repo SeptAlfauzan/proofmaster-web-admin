@@ -18,7 +18,7 @@ const Page = () => {
 
   if (data == undefined) return <Text>No data from server</Text>;
   return (
-    <Card padding={4}>
+    <Card padding={4} overflowX={{ base: "scroll", md: undefined }}>
       <DataTable
         actionWidget={
           <Button ml={4} rightIcon={<MdAdd />} colorScheme="blue">
