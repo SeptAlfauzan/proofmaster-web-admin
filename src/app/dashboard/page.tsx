@@ -15,12 +15,18 @@ import HandleError from "./_components/handle_error";
 import MenuCard from "./_components/menu_card";
 
 const Page = () => {
-  const { data, isLoading, mutate, error } = useSWR<DashboardStats>(
+  const { data, isLoading, mutate, error } = useSWR<DashboardStats, Error>(
     "/api/stats",
     fetcher
   );
   if (isLoading) return <Loader />;
-  if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
+  if (error)
+    return (
+      <HandleError
+        error={`Error: ${error.message}`}
+        onRefresh={() => mutate()}
+      />
+    );
   if (data == undefined)
     return (
       <HandleError error={"No data from server!"} onRefresh={() => mutate()} />

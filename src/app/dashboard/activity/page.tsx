@@ -11,13 +11,14 @@ import HandleError from "../_components/handle_error";
 
 const Page = () => {
   const router = useRouter();
-  const { data, isLoading, error, mutate } = useSWR<Activities>(
+  const { data, isLoading, error, mutate } = useSWR<Activities, Error>(
     "/api/activity",
     fetcher
   );
 
   if (isLoading) return <TableLoader />;
-  if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
+  if (error)
+    return <HandleError error={`Error: ${error}`} onRefresh={() => mutate()} />;
   if (!data) return <Text>No data from server</Text>;
 
   return (

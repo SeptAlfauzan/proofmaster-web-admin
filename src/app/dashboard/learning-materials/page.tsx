@@ -11,13 +11,19 @@ import HandleError from "../_components/handle_error";
 
 const Page = () => {
   const router = useRouter();
-  const { data, isLoading, error, mutate } = useSWR<LearningMaterials>(
+  const { data, isLoading, error, mutate } = useSWR<LearningMaterials, Error>(
     "/api/learning-materials",
     fetcher
   );
 
   if (isLoading) return <TableLoader />;
-  if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
+  if (error)
+    return (
+      <HandleError
+        error={`Error: ${error.message}`}
+        onRefresh={() => mutate()}
+      />
+    );
   if (!data) return <Text>No data from server</Text>;
 
   return (

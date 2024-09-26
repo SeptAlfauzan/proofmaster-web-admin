@@ -11,13 +11,19 @@ import { useRouter } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
-  const { data, isLoading, error, mutate } = useSWR<Teachers>(
+  const { data, isLoading, error, mutate } = useSWR<Teachers, Error>(
     "/api/teachers",
     fetcher
   );
 
   if (isLoading) return <TableLoader />;
-  if (error) return <HandleError error={error} onRefresh={() => mutate()} />;
+  if (error)
+    return (
+      <HandleError
+        error={`Error: ${error.message}`}
+        onRefresh={() => mutate()}
+      />
+    );
   if (!data) return <Text>No data from server</Text>;
 
   return (
