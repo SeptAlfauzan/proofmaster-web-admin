@@ -94,62 +94,64 @@ const Page = () => {
         </Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card p={4} w={{ md: "50%", base: "100%" }}>
-          <Heading>Add Student User Data</Heading>
-          <SimpleGrid columns={2} spacing={4}>
-            <FormControl isInvalid={!!errors.nim}>
-              <FormLabel>NIM</FormLabel>
-              <Input {...register("nim")} type="number" />
-              <FormErrorMessage>
-                {errors.nim && errors.nim.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.name}>
-              <FormLabel>Name</FormLabel>
-              <Input {...register("name")} />
-              <FormErrorMessage>
-                {errors.name && errors.name.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.email}>
-              <FormLabel>Email</FormLabel>
-              <Input {...register("email")} />
-              <FormErrorMessage>
-                {errors.email && errors.email.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.password}>
-              <FormLabel>Password</FormLabel>
-              <Input {...register("password")} type="password" />
-              <FormErrorMessage>
-                {errors.password && errors.password.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.confirmPassword}>
-              <FormLabel>Repeat Password</FormLabel>
-              <Input {...register("confirmPassword")} type="password" />
-              <FormErrorMessage>
-                {errors.confirmPassword && errors.confirmPassword.message}
-              </FormErrorMessage>
-            </FormControl>
-          </SimpleGrid>
-        </Card>
-        <Box display={"flex"} gap={4} mt={4}>
-          <Button
-            leftIcon={<MdChevronLeft />}
-            onClick={() => router.back()}
-            colorScheme="blue"
-            type="button"
-          >
-            Back
-          </Button>
-          <Button leftIcon={<MdSave />} colorScheme="green" type="submit">
-            {loading ? (
-              <CircularProgress isIndeterminate color="white" size={8} />
-            ) : (
-              "Submit"
-            )}
-          </Button>
+        <Box w={{ md: "50%", base: "100%" }}>
+          <Card p={4}>
+            <Heading>Add Student User Data</Heading>
+            <SimpleGrid columns={2} spacing={4}>
+              <FormControl isInvalid={!!errors.nim}>
+                <FormLabel>NIM</FormLabel>
+                <Input {...register("nim")} type="number" />
+                <FormErrorMessage>
+                  {errors.nim && errors.nim.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.name}>
+                <FormLabel>Name</FormLabel>
+                <Input {...register("name")} />
+                <FormErrorMessage>
+                  {errors.name && errors.name.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.email}>
+                <FormLabel>Email</FormLabel>
+                <Input {...register("email")} />
+                <FormErrorMessage>
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.password}>
+                <FormLabel>Password</FormLabel>
+                <Input {...register("password")} type="password" />
+                <FormErrorMessage>
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.confirmPassword}>
+                <FormLabel>Repeat Password</FormLabel>
+                <Input {...register("confirmPassword")} type="password" />
+                <FormErrorMessage>
+                  {errors.confirmPassword && errors.confirmPassword.message}
+                </FormErrorMessage>
+              </FormControl>
+            </SimpleGrid>
+          </Card>
+          <Box display={"flex"} gap={4} mt={4} justifyContent={"end"}>
+            <Button
+              leftIcon={<MdChevronLeft />}
+              onClick={() => router.back()}
+              colorScheme="blue"
+              type="button"
+            >
+              Back
+            </Button>
+            <Button leftIcon={<MdSave />} colorScheme="green" type="submit">
+              {loading ? (
+                <CircularProgress isIndeterminate color="white" size={8} />
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </Box>
         </Box>
       </form>
     </Box>

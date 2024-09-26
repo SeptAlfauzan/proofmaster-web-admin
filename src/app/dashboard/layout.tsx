@@ -59,7 +59,11 @@ export default function DashboardLayout({
 
   const SidebarContent = () => (
     <List padding="20px">
-      <Box mb="80px" key="dashboard-logo">
+      <Box
+        my="80px"
+        key="dashboard-logo"
+        display={{ base: "none", md: "block" }}
+      >
         <Image
           src="/images/logo_with_text.png"
           alt="logo"
@@ -170,7 +174,16 @@ export default function DashboardLayout({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerHeader>
+            <Box>
+              <Image
+                src="/images/logo_with_text.png"
+                alt="logo"
+                width={208}
+                height={64}
+              />
+            </Box>
+          </DrawerHeader>
           <DrawerBody>
             <SidebarContent />
           </DrawerBody>
@@ -188,8 +201,15 @@ export default function DashboardLayout({
         overflow={"hidden"}
       >
         <IconButton
+          shadow={"xl"}
+          outline={"1px solid gray"}
           aria-label="Open menu"
-          icon={<MdMenu />}
+          icon={
+            <center>
+              <MdMenu />
+            </center>
+          }
+          background={"white"}
           onClick={onOpen}
           display={{ base: "block", md: "none" }}
           position="fixed"

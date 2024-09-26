@@ -50,7 +50,7 @@ const InputFile: React.FC<InputFileProps> = ({ onChange, fileType }) => {
         {file ? (
           <Box mb={4} alignItems={"center"} display={"flex"} flexDir={"column"}>
             <Text>{file.name}</Text>
-            <Text>file size: {file.size}</Text>
+            <Text>file size: {(file.size / 1000000).toFixed(2)}Mb</Text>
           </Box>
         ) : (
           <Box mb={4} alignItems={"center"} display={"flex"} flexDir={"column"}>

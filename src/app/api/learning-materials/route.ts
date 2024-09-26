@@ -1,5 +1,5 @@
 import { LearningMaterials } from "@/app/domain/dto/learning_materials";
-import { PostActivityResult } from "@/app/domain/dto/post_acitivity_result";
+import { PostLearningMaterialResult } from "@/app/domain/dto/post_learning_material_result";
 import { JWT_TOKEN_KEY } from "@/constanta";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,31 +31,40 @@ export async function GET() {
 //TODO: replace with actual request body
 export async function POST(req: NextRequest) {
   let status = 200;
-  return NextResponse.json({ message: "not implemented yet!" }, { status });
   try {
     const formDataClient = await req.formData();
+
+    console.log(formDataClient);
+
     const baseUrl = process.env.BASE_URL;
     const file = formDataClient.get("file");
-    const name = formDataClient.get("name");
-    const cookieStore = cookies();
+    const description = formDataClient.get("description");
+    const title = formDataClient.get("title");
+    const icon = formDataClient.get("icon");
 
+    const cookieStore = cookies();
     const token = cookieStore.get(JWT_TOKEN_KEY)?.value;
 
     const formData = new FormData();
+    formData.append("title", title!);
+    formData.append("description", description!);
     formData.append("file", file!);
-    formData.append("name", name!);
+    formData.append("icon", icon!);
 
-    const rawResponse = await fetch(`${baseUrl}/api/activities/upload`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    const rawResponse = await fetch(
+      `${baseUrl}/api/learning-materials/upload`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
 
     status = rawResponse.status;
     if (status != 200) throw Error(rawResponse.statusText);
-    const result: PostActivityResult = await rawResponse.json();
+    const result: PostLearningMaterialResult = await rawResponse.json();
 
     return NextResponse.json({ result }, { status });
   } catch (e) {

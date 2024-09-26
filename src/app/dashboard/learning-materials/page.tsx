@@ -33,8 +33,8 @@ const Page = () => {
           </Button>
         }
         searchBy="title"
-        title="Activities"
-        desc="List activities"
+        title="Learning Materials"
+        desc="List learning materials data"
         data={data.data as unknown as DataItem[]}
       />
     </Card>

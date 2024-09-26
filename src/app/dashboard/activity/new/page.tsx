@@ -29,7 +29,7 @@ const activitySchema = z.object({
   name: z.string().min(1, "Activity name is required"),
   file: z
     .instanceof(File)
-    .refine((file) => file.size <= 5000000, "File size should be less than 5MB")
+    .refine((file) => file.size <= 4000000, "File size should be less than 4MB")
     .refine(
       (file) => file.type === "application/pdf",
       "Only PDF files are allowed"
@@ -64,8 +64,9 @@ const Page = () => {
         status: "success",
         duration: 1000,
         isClosable: true,
+        onCloseComplete: () => router.back(),
       });
-  }, [response, toast]);
+  }, [response, router, toast]);
 
   return (
     <Box>
@@ -90,49 +91,51 @@ const Page = () => {
         </Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card p={4} w={{ md: "50%", base: "100%" }}>
-          <Heading>Add activity</Heading>
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel>Activity Name</FormLabel>
-            <Input {...register("name")} />
-            <FormErrorMessage>
-              {errors.name && errors.name.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.file}>
-            <FormLabel>Upload File</FormLabel>
-            <Controller
-              name="file"
-              control={control}
-              render={({ field: { onChange, ...rest } }) => (
-                <InputFile
-                  fileType=".pdf"
-                  onChange={(file: File) => onChange(file)}
-                  {...rest}
-                />
+        <Box w={{ md: "50%", base: "100%" }}>
+          <Card p={4}>
+            <Heading>Add activity</Heading>
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel>Activity Name</FormLabel>
+              <Input {...register("name")} />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.file}>
+              <FormLabel>Upload File</FormLabel>
+              <Controller
+                name="file"
+                control={control}
+                render={({ field: { onChange, ...rest } }) => (
+                  <InputFile
+                    fileType=".pdf"
+                    onChange={(file: File) => onChange(file)}
+                    {...rest}
+                  />
+                )}
+              />
+              <FormErrorMessage>
+                {errors.file && errors.file.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Card>
+          <Box display={"flex"} gap={4} mt={4} justifyContent={"end"}>
+            <Button
+              leftIcon={<MdChevronLeft />}
+              onClick={() => router.back()}
+              colorScheme="blue"
+              type="button"
+            >
+              Back
+            </Button>
+            <Button leftIcon={<MdSave />} colorScheme="green" type="submit">
+              {loading ? (
+                <CircularProgress isIndeterminate color="white" size={8} />
+              ) : (
+                "Submit"
               )}
-            />
-            <FormErrorMessage>
-              {errors.file && errors.file.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Card>
-        <Box display={"flex"} gap={4} mt={4}>
-          <Button
-            leftIcon={<MdChevronLeft />}
-            onClick={() => router.back()}
-            colorScheme="blue"
-            type="button"
-          >
-            Back
-          </Button>
-          <Button leftIcon={<MdSave />} colorScheme="green" type="submit">
-            {loading ? (
-              <CircularProgress isIndeterminate color="white" size={8} />
-            ) : (
-              "Submit"
-            )}
-          </Button>
+            </Button>
+          </Box>
         </Box>
       </form>
     </Box>

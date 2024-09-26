@@ -1,11 +1,10 @@
-import { PostActivityResult } from "@/app/domain/dto/post_acitivity_result";
 import { useCallback, useState } from "react";
 import { ActivitySchemaType } from "../new/page";
 
 export const usePostActivity = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const [data, setData] = useState<PostActivityResult | undefined>();
+  const [data, setData] = useState<string | undefined>();
 
   const submit = useCallback(async (schema: ActivitySchemaType) => {
     try {
@@ -20,10 +19,10 @@ export const usePostActivity = () => {
 
       if (rawResponse.status != 200) throw Error(rawResponse.statusText);
 
-      const content = await rawResponse.json();
-      const parsed: PostActivityResult = content;
-      setData(parsed);
+      await rawResponse.json();
+      setData("success created new activity!");
     } catch (e) {
+      console.log(e);
       setError((e as Error).message);
     } finally {
       setLoading(false);
