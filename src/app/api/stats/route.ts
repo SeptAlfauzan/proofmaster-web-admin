@@ -79,7 +79,7 @@ export async function GET() {
           title: "Activities",
           label: "Assigned",
           total: resultActivities.data.activities.length,
-          link: "/dashboard/activities",
+          link: "/dashboard/activity",
         },
         {
           title: "Learning Materials",
