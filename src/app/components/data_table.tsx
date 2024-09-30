@@ -16,12 +16,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-  MdChevronLeft,
-  MdChevronRight,
-  MdDelete,
-  MdEdit,
-} from "react-icons/md";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 export type DataItem = {
   [key: string]: string | number;
@@ -32,7 +27,8 @@ type Props<T extends DataItem> = {
   searchBy: string;
   title: string;
   desc: string | undefined;
-  actionWidget?: React.ReactNode | undefined;
+  actionComponent?: React.ReactNode | undefined;
+  recordActionComponents: (itemId: string) => React.ReactNode;
 };
 
 const DataTable = <T extends DataItem>({
@@ -40,7 +36,8 @@ const DataTable = <T extends DataItem>({
   searchBy,
   title,
   desc,
-  actionWidget,
+  recordActionComponents,
+  actionComponent: actionWidget,
 }: Props<T>) => {
   const [headers, setHeaders] = useState<string[]>([]);
   const [tempData, setTempData] = useState<T[]>([]);
@@ -146,18 +143,7 @@ const DataTable = <T extends DataItem>({
                   )}
                   <Td>
                     <Box display={"flex"} gap={2} justifyContent={"end"}>
-                      <IconButton
-                        background={"none"}
-                        color={"blue"}
-                        icon={<MdEdit />}
-                        aria-label="edit"
-                      ></IconButton>
-                      <IconButton
-                        color={"red"}
-                        background={"none"}
-                        icon={<MdDelete />}
-                        aria-label="delete"
-                      ></IconButton>
+                      {recordActionComponents(item["id"].toString())}
                     </Box>
                   </Td>
                 </Tr>

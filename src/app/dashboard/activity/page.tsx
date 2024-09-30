@@ -3,14 +3,26 @@ import DataTable, { DataItem } from "@/app/components/data_table";
 import TableLoader from "@/app/components/table_loader";
 import { Activities } from "@/app/domain/dto/actitivities";
 import { fetcher } from "@/utils/fetcher";
-import { Button, Card, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import useSWR from "swr";
 import HandleError from "../_components/handle_error";
+import Dialog from "@/app/components/dialog";
+import React, { useState } from "react";
 
 const Page = () => {
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef(null);
+  const [clickedItemId, setClickedItemId] = useState<string | undefined>();
   const { data, isLoading, error, mutate } = useSWR<Activities, Error>(
     "/api/activity",
     fetcher
@@ -23,8 +35,54 @@ const Page = () => {
 
   return (
     <Card padding={4}>
+      <Dialog
+        isOpen={isOpen}
+        onClose={onClose}
+        cancelref={cancelRef}
+        componentsActions={
+          <Box>
+            <Button ref={cancelRef} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme="red"
+              onClick={() => {
+                console.log(clickedItemId);
+                onClose();
+              }}
+              ml={3}
+            >
+              Delete
+            </Button>
+          </Box>
+        }
+        title={`Delete this activity data?`}
+        text={
+          "Deleting this data will make the record dissapear from our server"
+        }
+      />
       <DataTable
-        actionWidget={
+        recordActionComponents={(id) => (
+          <Box>
+            <IconButton
+              background={"none"}
+              color={"blue"}
+              icon={<MdEdit />}
+              aria-label="edit"
+            />
+            <IconButton
+              onClick={() => {
+                setClickedItemId(id);
+                onOpen();
+              }}
+              color={"red"}
+              background={"none"}
+              icon={<MdDelete />}
+              aria-label="delete"
+            />
+          </Box>
+        )}
+        actionComponent={
           <Button
             rightIcon={<MdAdd />}
             onClick={() => router.push("/dashboard/activity/new")}
