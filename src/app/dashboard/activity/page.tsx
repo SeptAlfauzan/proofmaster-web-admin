@@ -69,6 +69,7 @@ const Page = () => {
               color={"blue"}
               icon={<MdEdit />}
               aria-label="edit"
+              onClick={() => router.push(`/dashboard/activity/${id}`)}
             />
             <IconButton
               onClick={() => {

@@ -1,17 +1,22 @@
-import { Activities } from "@/app/domain/dto/actitivities";
+import { Activity } from "@/app/domain/dto/activity";
 import { PostActivityResult } from "@/app/domain/dto/post_acitivity_result";
 import { JWT_TOKEN_KEY } from "@/constanta";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   let status: number = 500;
+
+  console.log(req);
 
   try {
     const cookieStore = cookies();
     const token = cookieStore.get(JWT_TOKEN_KEY)?.value;
     const baseUrl = process.env.BASE_URL;
-    const rawResponse = await fetch(`${baseUrl}/api/activities`, {
+    const rawResponse = await fetch(`${baseUrl}/api/activities/${params.id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -21,7 +26,7 @@ export async function GET() {
     });
 
     status = rawResponse.status;
-    const result: Activities = await rawResponse.json();
+    const result: Activity = await rawResponse.json();
     return NextResponse.json({
       data: result.data,
     });
@@ -29,7 +34,10 @@ export async function GET() {
     return NextResponse.json({ message: e }, { status: status });
   }
 }
-export async function POST(req: NextRequest) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   let status = 200;
   try {
     const formDataClient = await req.formData();
@@ -44,8 +52,8 @@ export async function POST(req: NextRequest) {
     formData.append("file", file!);
     formData.append("name", name!);
 
-    const rawResponse = await fetch(`${baseUrl}/api/activities/upload`, {
-      method: "POST",
+    const rawResponse = await fetch(`${baseUrl}/api/activities/${params.id}`, {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
       },

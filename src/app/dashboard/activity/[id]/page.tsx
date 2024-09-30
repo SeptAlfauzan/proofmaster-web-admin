@@ -1,4 +1,6 @@
 "use client";
+import { Activity } from "@/app/domain/dto/activity";
+import { fetcher } from "@/utils/fetcher";
 import {
   Alert,
   AlertDescription,
@@ -14,16 +16,19 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { MdChevronLeft, MdSave } from "react-icons/md";
+import useSWR from "swr";
 import { z } from "zod";
-import { usePostActivity } from "../_hooks/use_post_activity";
+import HandleError from "../../_components/handle_error";
 import InputFile from "../../_components/input_file";
-import { useRouter } from "next/navigation";
+import { useEditActivity } from "../_hooks/use_edit_activity";
 
 const activitySchema = z.object({
   name: z.string().min(1, "Activity name is required"),
@@ -38,15 +43,25 @@ const activitySchema = z.object({
 
 export type ActivitySchemaType = z.infer<typeof activitySchema>;
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
+  const { data, isLoading, error, mutate } = useSWR<Activity, Error>(
+    `/api/activity/${params.id}`,
+    fetcher
+  );
+  const [initialPdfFile, setInitialPdfFile] = useState<File | undefined>();
+
   const router = useRouter();
   const toast = useToast();
-  const [loading, error, response, submit, dismissError] = usePostActivity();
+  const [loading, errorEdit, response, submit, dismissError] = useEditActivity(
+    params.id
+  );
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm<ActivitySchemaType>({
     resolver: zodResolver(activitySchema),
   });
@@ -59,8 +74,8 @@ const Page = () => {
   useEffect(() => {
     if (response)
       toast({
-        title: "Activity created.",
-        description: "We've created new activity for you.",
+        title: "Activity successfully edited.",
+        description: "We've edit the current activity for you.",
         status: "success",
         duration: 1000,
         isClosable: true,
@@ -68,9 +83,27 @@ const Page = () => {
       });
   }, [response, router, toast]);
 
+  useMemo(() => {
+    if (!data) return;
+    const setInitialValue = async () => {
+      setValue("name", data.data.title);
+      const blob = await fetch(data.data.pdf_url).then((r) => r.blob());
+      const file = new File([blob], "initial_file.pdf", {
+        type: "application/pdf",
+      });
+      setInitialPdfFile(file);
+      setValue("file", file);
+    };
+    setInitialValue();
+  }, [data, setValue]);
+
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error)
+    return <HandleError error={`${error}`} onRefresh={() => mutate()} />;
+
   return (
     <Box>
-      {error && (
+      {errorEdit && (
         <Alert
           status="error"
           width={{ base: "100%", md: "400px" }}
@@ -79,7 +112,7 @@ const Page = () => {
           <AlertIcon />
           <Box flex={1}>
             <AlertTitle>Error!</AlertTitle>
-            <AlertDescription>{error.toString()}</AlertDescription>
+            <AlertDescription>{errorEdit.toString()}</AlertDescription>
           </Box>
           <CloseButton
             alignSelf="flex-start"
@@ -93,7 +126,7 @@ const Page = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box w={{ md: "50%", base: "100%" }}>
           <Card p={4}>
-            <Heading mb={4}>Add activity</Heading>
+            <Heading mb={4}>Edit activity</Heading>
             <FormControl isInvalid={!!errors.name}>
               <FormLabel>Activity Name</FormLabel>
               <Input {...register("name")} />
@@ -108,6 +141,7 @@ const Page = () => {
                 control={control}
                 render={({ field: { onChange, ...rest } }) => (
                   <InputFile
+                    defaultValue={initialPdfFile}
                     fileType=".pdf"
                     onChange={(file: File) => onChange(file)}
                     {...rest}

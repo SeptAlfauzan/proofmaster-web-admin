@@ -1,14 +1,19 @@
 "use client";
 import { Box, Button, Input, Text } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { MdOutlineCloudUpload } from "react-icons/md";
 
-interface InputFileProps {
+type InputFileProps = {
   onChange: (file: File) => void;
   fileType: string;
-}
+  defaultValue?: File | undefined;
+};
 
-const InputFile: React.FC<InputFileProps> = ({ onChange, fileType }) => {
+const InputFile: React.FC<InputFileProps> = ({
+  onChange,
+  fileType,
+  defaultValue,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const ref = useRef<HTMLInputElement>(null);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,6 +23,12 @@ const InputFile: React.FC<InputFileProps> = ({ onChange, fileType }) => {
       setFile(file);
     }
   };
+
+  useMemo(() => {
+    if (!defaultValue) return;
+    setFile(defaultValue);
+  }, [defaultValue]);
+
   return (
     <Box
       height={224}
