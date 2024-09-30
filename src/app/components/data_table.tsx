@@ -15,6 +15,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
@@ -83,6 +84,26 @@ const DataTable = <T extends DataItem>({
     setCurrentPage(1);
   };
 
+  const renderCell = (item: T, key: number, header: string) => {
+    const value = item[header];
+
+    // Only check for URL if the header suggests it might be a URL
+    if (
+      item[header].toString().toLowerCase().includes("https://") ||
+      item[header].toString().toLowerCase().includes("http://")
+    ) {
+      return (
+        <Td key={key}>
+          <Link href={item[header].toString()} target="_blank">
+            <Text color={"blue"}>{item[header]}</Text>
+          </Link>
+        </Td>
+      );
+    }
+    // For non-URL data, just render the value
+    return <Td key={key}>{String(value)}</Td>;
+  };
+
   return (
     <Box>
       <Box
@@ -138,7 +159,7 @@ const DataTable = <T extends DataItem>({
                         />
                       </center>
                     ) : (
-                      <Td key={index}>{item[header]}</Td>
+                      renderCell(item, key, header)
                     )
                   )}
                   <Td>
