@@ -1,4 +1,5 @@
 import { Activity } from "@/app/domain/dto/activity";
+import { DeleteActivityResult } from "@/app/domain/dto/delete_activity_result";
 import { PostActivityResult } from "@/app/domain/dto/post_acitivity_result";
 import { JWT_TOKEN_KEY } from "@/constanta";
 import { cookies } from "next/headers";
@@ -63,6 +64,34 @@ export async function PUT(
     status = rawResponse.status;
     if (status != 200) throw Error(rawResponse.statusText);
     const result: PostActivityResult = await rawResponse.json();
+
+    return NextResponse.json({ result }, { status });
+  } catch (e) {
+    return NextResponse.json({ message: e }, { status: status });
+  }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  let status = 200;
+  try {
+    const baseUrl = process.env.BASE_URL;
+    const cookieStore = cookies();
+
+    const token = cookieStore.get(JWT_TOKEN_KEY)?.value;
+
+    const rawResponse = await fetch(`${baseUrl}/api/activities/${params.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    status = rawResponse.status;
+    if (status != 200) throw Error(rawResponse.statusText);
+    const result: DeleteActivityResult = await rawResponse.json();
 
     return NextResponse.json({ result }, { status });
   } catch (e) {

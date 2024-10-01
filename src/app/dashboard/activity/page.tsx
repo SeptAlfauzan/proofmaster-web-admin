@@ -1,5 +1,6 @@
 "use client";
 import DataTable, { DataItem } from "@/app/components/data_table";
+import Dialog from "@/app/components/dialog";
 import TableLoader from "@/app/components/table_loader";
 import { Activities } from "@/app/domain/dto/actitivities";
 import { fetcher } from "@/utils/fetcher";
@@ -7,18 +8,21 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   IconButton,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import useSWR from "swr";
 import HandleError from "../_components/handle_error";
-import Dialog from "@/app/components/dialog";
-import React, { useState } from "react";
+import { useDeleteActivity } from "./_hooks/use_delete_activity";
 
 const Page = () => {
+  const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null);
@@ -27,6 +31,33 @@ const Page = () => {
     "/api/activity",
     fetcher
   );
+
+  const [loadingDelete, errorDelete, deleteResponse, onDelete] =
+    useDeleteActivity();
+
+  useEffect(() => {
+    if (errorDelete || deleteResponse) {
+      onClose();
+      toast({
+        title: errorDelete
+          ? "Error delete activity"
+          : deleteResponse
+          ? "Success delete activity"
+          : "-",
+        description: errorDelete
+          ? `Error: ${errorDelete}`
+          : deleteResponse
+          ? "Your activity successfully deleted!"
+          : "-",
+        status: errorDelete ? "error" : deleteResponse ? "success" : "info",
+        duration: 1000,
+        onCloseComplete: () => mutate(),
+        isClosable: true,
+      });
+    }
+  }, [errorDelete, deleteResponse, toast, mutate, onClose]);
+
+  useEffect(() => {}, [loadingDelete]);
 
   if (isLoading) return <TableLoader />;
   if (error)
@@ -41,18 +72,19 @@ const Page = () => {
         cancelref={cancelRef}
         componentsActions={
           <Box>
-            <Button ref={cancelRef} onClick={onClose}>
+            <Button disabled={loadingDelete} ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>
             <Button
+              disabled={loadingDelete}
               colorScheme="red"
               onClick={() => {
-                console.log(clickedItemId);
-                onClose();
+                if (!clickedItemId) return;
+                onDelete(clickedItemId);
               }}
               ml={3}
             >
-              Delete
+              {loadingDelete ? <CircularProgress size={8} /> : "Delete"}
             </Button>
           </Box>
         }
