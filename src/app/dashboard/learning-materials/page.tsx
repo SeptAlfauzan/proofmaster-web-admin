@@ -1,5 +1,6 @@
 "use client";
 import DataTable, { DataItem } from "@/app/components/data_table";
+import Dialog from "@/app/components/dialog";
 import TableLoader from "@/app/components/table_loader";
 import { LearningMaterials } from "@/app/domain/dto/learning_materials";
 import { fetcher } from "@/utils/fetcher";
@@ -7,19 +8,22 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   IconButton,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import useSWR from "swr";
 import HandleError from "../_components/handle_error";
-import React, { useState } from "react";
-import Dialog from "@/app/components/dialog";
+import { useDeleteLearningMaterial } from "./_hooks/use_delete_learning_material";
 
 const Page = () => {
   const router = useRouter();
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null);
   const [clickedItemId, setClickedItemId] = useState<string | undefined>();
@@ -27,6 +31,31 @@ const Page = () => {
     "/api/learning-materials",
     fetcher
   );
+
+  const [loadingDelete, errorDelete, deleteResponse, onDelete] =
+    useDeleteLearningMaterial();
+
+  useEffect(() => {
+    if (errorDelete || deleteResponse) {
+      onClose();
+      toast({
+        title: errorDelete
+          ? "Error delete learning material"
+          : deleteResponse
+          ? "Success delete learning material"
+          : "-",
+        description: errorDelete
+          ? `Error: ${errorDelete}`
+          : deleteResponse
+          ? "Your learning material successfully deleted!"
+          : "-",
+        status: errorDelete ? "error" : deleteResponse ? "success" : "info",
+        duration: 1000,
+        onCloseComplete: () => mutate(),
+        isClosable: true,
+      });
+    }
+  }, [errorDelete, deleteResponse, toast, mutate, onClose]);
 
   if (isLoading) return <TableLoader />;
   if (error)
@@ -52,12 +81,12 @@ const Page = () => {
             <Button
               colorScheme="red"
               onClick={() => {
-                console.log(clickedItemId);
-                onClose();
+                if (!clickedItemId) return;
+                onDelete(clickedItemId);
               }}
               ml={3}
             >
-              Delete
+              {loadingDelete ? <CircularProgress size={8} /> : "Delete"}
             </Button>
           </Box>
         }
@@ -70,6 +99,7 @@ const Page = () => {
         recordActionComponents={(id) => (
           <Box>
             <IconButton
+              onClick={() => router.push(`/dashboard/learning-materials/${id}`)}
               background={"none"}
               color={"blue"}
               icon={<MdEdit />}

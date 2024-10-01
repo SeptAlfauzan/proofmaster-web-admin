@@ -57,8 +57,6 @@ const Page = () => {
     }
   }, [errorDelete, deleteResponse, toast, mutate, onClose]);
 
-  useEffect(() => {}, [loadingDelete]);
-
   if (isLoading) return <TableLoader />;
   if (error)
     return <HandleError error={`Error: ${error}`} onRefresh={() => mutate()} />;

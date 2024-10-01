@@ -28,7 +28,6 @@ export async function GET() {
     return NextResponse.json({ message: e }, { status: status });
   }
 }
-//TODO: replace with actual request body
 export async function POST(req: NextRequest) {
   let status = 200;
   try {
