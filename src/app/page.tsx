@@ -171,7 +171,7 @@ const HomeSection = () => {
             }}
           >
             <Image
-              src="/images/icon.png"
+              src="/images/playstore_icon.png"
               width={"32px"}
               height={"38px"}
               alt="icon playstore"
