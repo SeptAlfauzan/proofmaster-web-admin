@@ -6,12 +6,10 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   let status: number = 500;
-
-  console.log(req);
 
   try {
     const cookieStore = cookies();

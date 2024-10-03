@@ -67,7 +67,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const toast = useToast();
   const [loadBlobData, setLoadBlobData] = useState(false);
   const [loadingEdit, errorEdit, response, submit, dismissErrorEdit] =
-    useEditLearningMaterial(params.id);
+    useEditLearningMaterial();
 
   const {
     register,
@@ -84,18 +84,21 @@ const Page = ({ params }: { params: { id: string } }) => {
     setLoadBlobData(true);
     const setInitialValue = async () => {
       try {
-        setValue("title", data.data.title);
-        setValue("description", data.data.description);
         const blobPdf = await fetch(data.data.pdf_url).then((r) => r.blob());
+        const blobIcon = await fetch(data.data.ic_url).then((r) => r.blob());
+
         const filePdf = new File([blobPdf], "initial_file.pdf", {
           type: "application/pdf",
         });
-        const blobIcon = await fetch(data.data.ic_url).then((r) => r.blob());
         const fileIcon = new File([blobIcon], "initial_icon.png", {
           type: "image/png",
         });
+
         setInitialPdfFile(filePdf);
         setInitialIconFile(fileIcon);
+
+        setValue("title", data.data.title);
+        setValue("description", data.data.description);
         setValue("file", filePdf);
         setValue("icon", fileIcon);
       } catch (error) {
@@ -121,7 +124,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const onSubmit = (data: LearningMaterialSchemaType) => {
     console.log(data);
-    submit(data);
+    submit(data, params.id);
   };
 
   if (isLoading) return <Text>Loading...</Text>;
@@ -213,17 +216,6 @@ const Page = ({ params }: { params: { id: string } }) => {
                         />
                       )}
                     />
-                    {/* <Box>
-                    <Text>Preview Icon</Text>
-                    {data?.data.ic_url && (
-                      <Image
-                        src={data?.data.ic_url}
-                        alt={"preview"}
-                        width={100}
-                        height={100}
-                        />
-                        )}
-                        </Box> */}
                   </Box>
                   <FormErrorMessage>
                     {errors.icon && errors.icon.message}

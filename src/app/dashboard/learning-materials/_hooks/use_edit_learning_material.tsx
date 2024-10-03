@@ -1,15 +1,16 @@
-import { EditLearingMaterialResponse } from "@/app/domain/dto/edit_learning_material";
+// import { EditLearingMaterialResponse } from "@/app/domain/dto/edit_learning_material";
 import { PostActivityResult } from "@/app/domain/dto/post_acitivity_result";
 import { useCallback, useState } from "react";
 import { LearningMaterialSchemaType } from "../new/page";
+import { EditLearingMaterialResponse } from "@/app/domain/dto/edit_learning_material";
 
-export const useEditLearningMaterial = (id: string) => {
+export const useEditLearningMaterial = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [data, setData] = useState<PostActivityResult | undefined>();
 
   const submit = useCallback(
-    async (schema: LearningMaterialSchemaType) => {
+    async (schema: LearningMaterialSchemaType, id: string) => {
       try {
         setLoading(true);
         const formData = new FormData();
@@ -18,6 +19,8 @@ export const useEditLearningMaterial = (id: string) => {
         formData.append("icon", schema.icon);
         formData.append("description", schema.description);
         console.log(formData);
+        console.log(schema);
+        console.log(id);
 
         const rawResponse = await fetch(`/api/learning-materials/${id}`, {
           method: "PUT",
@@ -35,7 +38,7 @@ export const useEditLearningMaterial = (id: string) => {
         setLoading(false);
       }
     },
-    [id]
+    []
   );
 
   const dismissError = useCallback(() => setError(undefined), []);

@@ -10,4 +10,5 @@ export interface Teacher {
   id: string;
   photo_url: string;
   name: string;
+  email: string;
 }
